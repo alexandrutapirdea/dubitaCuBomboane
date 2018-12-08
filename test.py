@@ -4,6 +4,7 @@
 
 import csv
 import string
+
 outputfile = open('placelist.txt','w')
 with open("good.csv") as csvFile:
     reader = csv.reader(csvFile, delimiter='\t', quoting=csv.QUOTE_NONE)
@@ -27,6 +28,14 @@ with open("good.csv") as csvFile:
 
 
 myList = [[k.lower()] for l in myList for k in l]
-
+finalList = []
 for element in myList:
+    str1 = ''.join(element)
+    words = str1.split()
+    newRow = []
+    for word in words:
+        newRow.append(word)
+    finalList.append(newRow)
+
+for element in finalList:
     print(element)
