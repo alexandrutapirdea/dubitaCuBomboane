@@ -1,4 +1,5 @@
 import pandas as pd
+import csv
 from io import StringIO
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
@@ -116,12 +117,21 @@ X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
 clf = MultinomialNB().fit(X_train_tfidf, y_train)
 
-values = clf.predict_proba(count_vect.transform(["I touch my eyes, i`m dreaming for end, and enchanting woods is only a dream, I feel the sun my eyes will burn, for my soul I see anything."]))
+#values = clf.predict_proba(count_vect.transform(["No, it ain't been easy for me, I'm not over you yetBut sometimes I get lucky and forgetSometimes I can close my eyes and you're not waiting thereConstantly reminding me how much you used to careAnd losing you is one thing I guess I'll always regret"]))
 # print(clf.predict_proba(count_vect.transform(["I touch my eyes, i`m dreaming for end, and enchanting woods is only a dream, I feel the sun my eyes will burn, for my soul I see anything."])))
-print(values)
-print(clf.classes_)
-order = values.argsort()[-2:]
-print(order)
-print("prima " + clf.classes_[order[0][0]])
-print("a doua " + clf.classes_[order[0][1]])
+
+#in read csv change "tests.csv" to file name of csv tests
+
+test_cases = pd.read_csv("tests.csv")
+with open('results.csv',mode='w') as result_file:
+    writer = csv.writer(result_file,delimiter=',',quotechar='"',quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['Id','Prediction 1','Prediction 2'])
+    for row in test_cases.values:
+        values = clf.predict_proba(count_vect.transform([row[1]]))
+        order = np.argpartition(np.array(values[0]), -2)[-2:]
+        writer.writerow([row[0],clf.classes_[order[0]],clf.classes_[order[1]]])
+
+#print(order)
+#print("prima " + clf.classes_[order[0]])
+#print("a doua " + clf.classes_[order[1]])
 # print(clf.predict_proba(count_vect.transform(["Love Angels"])[2]))
